@@ -8,4 +8,4 @@ const Mensaje = (params) => {
     )  
 }
 
-  export default Mensaje;
+export default Mensaje;
