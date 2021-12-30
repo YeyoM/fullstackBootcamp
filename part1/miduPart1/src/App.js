@@ -14,7 +14,7 @@ const App = () => {
 
 export default App;
 
-/* Ejercicio hecho con MiduDev
+/* Ejercicio 1 hecho con MiduDev
 import './App.css';
 import Mensaje from './Mensaje';
 
