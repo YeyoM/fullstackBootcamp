@@ -1,40 +1,48 @@
 import './App.css';
-import {Note} from './Note';
+import { useState } from 'react';
+import { Note } from './Note';
 
-const notes = [
-  {
-    id: 1,
-    content: 'HTML is easy',
-    date: '2019-05-30T17:30:31.098Z',
-    important: true
-  },
-  {
-    id: 2,
-    content: 'Browser can execute only JavaScript',
-    date: '2019-05-30T18:39:34.091Z',
-    important: false
-  },
-  {
-    id: 3,
-    content: 'GET and POST are the most important methods of HTTP protocol',
-    date: '2019-05-30T19:20:14.298Z',
-    important: true
+function App(props) {
+
+  const [notes, setNotes] =  useState(props.notes);
+  const [newNote, setNewNote] =  useState('');
+
+  const handleChange = (event) => {
+    setNewNote(event.target.value);
   }
-]
 
+  const handleSubmit = (event) => {
 
-function App() {
+    event.preventDefault();
 
-  if (typeof notes === 'undefined' || notes.length === 0) {
+    const noteToAddToState = {
+      id: notes.length + 1,
+      content: newNote,
+      date: new Date().toISOString(),
+      important: Math.random < 0.5
+    }
+    console.log(noteToAddToState);
+    
+    setNotes(notes.concat(noteToAddToState));
+    setNewNote("");
+  }
+
+  /*if (typeof notes === 'undefined' || notes.length === 0) {
     return "No existen notas que mostrar"
-  }
+  }*/
 
   return (
-    <ul>
-      {notes.map((note) => (
-        <Note key={note.id} content={note.content} date={note.date}/>
-      ))}
-    </ul>
+    <div>
+      <ul>
+        {notes.map((note) => (
+          <Note key={note.id} {...note}/>
+        ))}
+      </ul>
+      <form onSubmit={handleSubmit}>
+        <input type="text" onChange={handleChange} value={newNote}/>
+        <button>Create Note</button>
+      </form>
+    </div>
   )
 }
 
