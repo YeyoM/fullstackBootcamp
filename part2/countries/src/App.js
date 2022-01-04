@@ -1,6 +1,8 @@
 import './App.css';
 import {useState, useEffect} from 'react'
 import axios from 'axios'
+import OneCountry from './components/OneCountry'
+import CountryList from './components/CountryList'
 
 function App() {
 
@@ -45,42 +47,11 @@ function App() {
       }
       { matchingCountriesNumber >= 10
         ? 'Too many matches, please be more specific' 
-        : countries
-          .filter((country) => {
-            if (country.name.common.toLowerCase().includes(newFilter.toLocaleLowerCase()) === true){
-              return country
-            }
-          })
-          .map((country) => {
-            return (
-              <h3 key={country.population + country.area}>{country.name.common}</h3>
-            )
-          }) 
+        : <CountryList countries={countries} newFilter={newFilter}/>
       }
-      { matchingCountriesNumber === 1 
-        ? countries
-          .filter((country) => {
-            if (country.name.common.toLowerCase().includes(newFilter.toLocaleLowerCase()) === true){
-              return country
-            }
-          })
-          .map((country) => {
-            return (
-              <div key={country.population + country.area}>
-                <p>Capital:    {country.capital}</p>
-                <p>Population: {country.population}</p>
-                <h4>Languages</h4>
-                  {
-                    Object.values(country.languages).map((lang) => {
-                      return (
-                        <p>{lang}</p>
-                      )
-                    })
-                  }
-                <img src={country.flags.png} alt="Flag" />
-              </div>
-            )
-          })
+      { 
+        matchingCountriesNumber === 1 
+        ? <OneCountry countries={countries} newFilter={newFilter}/>
         : '' 
       }
     </div>
