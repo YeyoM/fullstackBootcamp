@@ -1,11 +1,22 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Note } from './Note';
+import axios from 'axios'
 
-function App(props) {
+function App() {
 
-  const [notes, setNotes] =  useState(props.notes);
+  const [notes, setNotes] =  useState([]);
   const [newNote, setNewNote] =  useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+      axios.get('https://jsonplaceholder.typicode.com/posts')
+      .then(response => {
+        const {data} = response;
+        setNotes(data)
+      })
+      .catch(err => console.error(err));
+  }, [newNote])
 
   const handleChange = (event) => {
     setNewNote(event.target.value);
@@ -17,9 +28,8 @@ function App(props) {
 
     const noteToAddToState = {
       id: notes.length + 1,
-      content: newNote,
-      date: new Date().toISOString(),
-      important: Math.random < 0.5
+      title: newNote,
+      body: newNote
     }
     console.log(noteToAddToState);
     
@@ -33,6 +43,10 @@ function App(props) {
 
   return (
     <div>
+      <h2>Notes</h2>
+      {
+        loading ? 'Cargando...' : ''
+      }
       <ul>
         {notes.map((note) => (
           <Note key={note.id} {...note}/>
