@@ -1,6 +1,8 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import { Note } from './Note';
+import getAllNotes from './services/notes/getAllNotes'
+import createNote from './services/notes/createNote'
 import axios from 'axios'
 
 function App() {
@@ -8,14 +10,15 @@ function App() {
   const [notes, setNotes] =  useState([]);
   const [newNote, setNewNote] =  useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-      axios.get('https://jsonplaceholder.typicode.com/posts')
-      .then(response => {
-        const {data} = response;
-        setNotes(data)
-      })
-      .catch(err => console.error(err));
+    setLoading(true);
+    getAllNotes().then((notes) => {
+      setNotes(notes);
+      setLoading(false);
+    })
+    .catch(err => console.error(err));
   }, [newNote])
 
   const handleChange = (event) => {
@@ -27,19 +30,24 @@ function App() {
     event.preventDefault();
 
     const noteToAddToState = {
-      id: notes.length + 1,
       title: newNote,
-      body: newNote
+      body: newNote,
+      userId: 1
     }
-    console.log(noteToAddToState);
-    
-    setNotes(notes.concat(noteToAddToState));
+
+    setError('')
+
+    createNote(noteToAddToState)
+      .then(newNote => {
+        setNotes(prevNotes => prevNotes.concat(newNote))
+      })
+      .catch(err => {
+        console.error(err)
+        setError('La API ha petado')
+      });
+
     setNewNote("");
   }
-
-  /*if (typeof notes === 'undefined' || notes.length === 0) {
-    return "No existen notas que mostrar"
-  }*/
 
   return (
     <div>
