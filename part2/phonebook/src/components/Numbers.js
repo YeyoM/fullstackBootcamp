@@ -1,6 +1,6 @@
 import Contact from './Contact';
 
-const Numbers = ({persons, newFilter}) => {
+const Numbers = ({persons, newFilter, handleDelete, handleDeleteClick}) => {
     return (
         <div>   
             <h2>Numbers</h2>
@@ -11,7 +11,11 @@ const Numbers = ({persons, newFilter}) => {
                   }
                 })
                 .map((person) => {
-                  return <Contact key={person.id} {...person}/>
+                  return (
+                    <form onSubmit={handleDelete} key={person.id}>
+                      <Contact key={person.id} {...person}/> <button key={person.id} onClick={(e) => {handleDeleteClick(person.id, e)}}>Delete</button>
+                    </form>
+                  )
             })}
         </div> 
     )
